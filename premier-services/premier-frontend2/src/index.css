@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+/* ─── Keyframes ─────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmerLoad {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* ─── Page & Section Entrance ───────────────────────────────── */
+.page-enter {
+  animation: scaleIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.35s ease both;
+}
+
+/* ─── Stagger Row Fade-Up ───────────────────────────────────── */
+.row-animated {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Card Hover Lift ───────────────────────────────────────── */
+.card-lift {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.11) !important;
+}
+
+/* ─── Button Primary (blue) ─────────────────────────────────── */
+.btn-primary {
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.16s ease !important;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(27, 79, 155, 0.44) !important;
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  transition-duration: 0.08s !important;
+}
+
+/* ─── Button Amber (save / PDF) ─────────────────────────────── */
+.btn-amber {
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.16s ease !important;
+}
+.btn-amber:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(245, 166, 35, 0.5) !important;
+}
+.btn-amber:active:not(:disabled) {
+  transform: translateY(0);
+  transition-duration: 0.08s !important;
+}
+
+/* ─── Input / Textarea Focus ────────────────────────────────── */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  border-color: #1B4F9B !important;
+  box-shadow: 0 0 0 3px rgba(27, 79, 155, 0.13) !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* ─── Skeleton Shimmer ──────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e5e5e5 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmerLoad 1.6s infinite;
+  border-radius: 8px;
+}
+
+/* ─── Sidebar NavButton – smoother active transition ────────── */
+.sidebar-nav-btn {
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* ─── Tooltip-like hover on CIN/confidence values ───────────── */
+.mono-value {
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  letter-spacing: 0.03em;
+}
+
+/* ─── Hero decorative float (optional, applied to SVG/icon) ─── */
+.float-icon {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ─── Custom Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+/* ─── Tailwind animate-ping / animate-pulse passthrough ─────── */
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.animate-ping  { animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* ─── Stagger delays ────────────────────────────────────────── */
+.stagger-1 { animation-delay: 0.06s !important; }
+.stagger-2 { animation-delay: 0.12s !important; }
+.stagger-3 { animation-delay: 0.18s !important; }
+.stagger-4 { animation-delay: 0.24s !important; }
+.stagger-5 { animation-delay: 0.30s !important; }
+.stagger-6 { animation-delay: 0.36s !important; }
+
+/* ─── Card Shine (light sweep on hover) ─────────────────────── */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+.card-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -80%;
+  width: 50%; height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.14) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0s;
+  pointer-events: none;
+  z-index: 1;
+}
+.card-shine:hover::after {
+  left: 140%;
+  transition: left 0.55s ease;
+}
+
+/* ─── Stat card hover glow ───────────────────────────────────── */
+.stat-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s ease !important;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.10) !important;
+}
+
+/* ─── Count-up entrance ─────────────────────────────────────── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.count-up {
+  animation: countUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: inline-block;
+}
+
+/* ─── Table row left-border hover ────────────────────────────── */
+.table-row-hover {
+  position: relative;
+  transition: background 0.15s ease !important;
+}
+.table-row-hover::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #1B4F9B;
+  border-radius: 0 2px 2px 0;
+  transform: scaleY(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.table-row-hover:hover::before {
+  transform: scaleY(1);
+}
+.table-row-hover:hover {
+  background: #f0f6ff !important;
+}
+
+/* ─── Progress / confidence bar fill animation ───────────────── */
+@keyframes barScale {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.bar-fill {
+  transform-origin: left;
+  animation: barScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Hero gradient animation ────────────────────────────────── */
+@keyframes heroGradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero-gradient-anim {
+  animation: heroGradient 8s ease infinite;
+}
+
+/* ─── Upload zone animated border ────────────────────────────── */
+@keyframes borderPulse {
+  0%, 100% { border-color: #D1D9E6; box-shadow: none; }
+  50%       { border-color: #93B4E8; box-shadow: 0 0 0 4px rgba(27,79,155,0.05); }
+}
+.upload-zone-idle {
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+/* ─── Result card entrance (staggered) ───────────────────────── */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-in-up {
+  animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Badge shimmer for Cancer result ────────────────────────── */
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(226, 75, 74, 0.3); }
+  50%       { box-shadow: 0 0 0 5px rgba(226, 75, 74, 0); }
+}
+.badge-glow-danger {
+  animation: badgeGlow 2.5s ease-in-out infinite;
+}
+@keyframes badgeGlowGreen {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(39, 181, 98, 0.3); }
+  50%       { box-shadow: 0 0 0 5px rgba(39, 181, 98, 0); }
+}
+.badge-glow-safe {
+  animation: badgeGlowGreen 2.5s ease-in-out infinite;
+}
+
+/* ─── Pipeline step connector shimmer ────────────────────────── */
+@keyframes connectorFill {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+.connector-fill {
+  animation: connectorFill 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Floating label input ────────────────────────────────────── */
+.input-group {
+  position: relative;
+}
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  transform: translateY(-20px) scale(0.85);
+  color: #1B4F9B;
+}
+
+/* ─── Glassmorphism card variant ──────────────────────────────── */
+.card-glass {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ─── Smooth page transition ──────────────────────────────────── */
+.page-transition {
+  animation: scaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Loading dots ────────────────────────────────────────────── */
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+  40%            { transform: scale(1); opacity: 1; }
+}
+.dot-bounce { display: inline-block; width: 8px; height: 8px; border-radius: 50%; animation: dotBounce 1.4s ease-in-out infinite both; }
+.dot-bounce:nth-child(1) { animation-delay: -0.32s; }
+.dot-bounce:nth-child(2) { animation-delay: -0.16s; }
+.dot-bounce:nth-child(3) { animation-delay:      0; }

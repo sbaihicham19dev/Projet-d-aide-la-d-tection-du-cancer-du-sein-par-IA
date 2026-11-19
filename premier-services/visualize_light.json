@@ -1,0 +1,1 @@
+{"prediction_id":"41faf37b-b4dc-41d4-8129-9ea2054d558c","filename":"Cancer_val_00029.jpg","method":"intensity-gradcam-fallback","overlay_base64":null,"heatmap_base64":null,"focus_score":0.3051,"tumor_area_pct":6.1686,"width":3541,"height":5311,"timestamp":"2026-06-01T10:47:08.165677+00:00"}

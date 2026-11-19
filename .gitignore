@@ -1,0 +1,35 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# AI models
+*.pt
+*.pth
+*.h5
+*.onnx
+*.pkl
+
+# Medical datasets
+datasets/
+data/
+**/datasets/
+**/data/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db

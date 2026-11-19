@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pika
+Pillow
+pydantic
+python-dotenv
+python-multipart
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.6.0+cpu
+torchvision==0.21.0+cpu

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\hicha\\\\Documents\\\\breast-cancer-pipeline\\\\premier-services\" -Recurse -Filter \"requirements.txt\" | ForEach-Object { Write-Host \"=== $\\($_.FullName\\) ===\"; Get-Content $_.FullName; Write-Host \"\" })",
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\hicha\\\\Documents\\\\breast-cancer-pipeline\\\\premier-services\\\\premier-frontend2\\\\src\" -Recurse | Where-Object {!$_.PSIsContainer} | Select-Object FullName | Format-Table -AutoSize)"
+    ]
+  }
+}

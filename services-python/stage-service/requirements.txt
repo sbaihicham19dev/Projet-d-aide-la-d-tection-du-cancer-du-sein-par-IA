@@ -1,0 +1,6 @@
+fastapi>=0.111.0
+uvicorn[standard]
+python-multipart
+aio_pika>=9.4.0
+pydantic
+python-dotenv>=1.0.0

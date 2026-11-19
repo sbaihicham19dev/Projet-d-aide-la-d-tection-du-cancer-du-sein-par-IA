@@ -1,0 +1,202 @@
+name: breast-cancer-pipeline
+
+services:
+
+  # ── Infrastructure ───────────────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: breast-postgres
+    environment:
+      POSTGRES_DB: clinique_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - ./storage:/app/storage
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d clinique_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: breast-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Spring Boot Gateway ──────────────────────────────────────────────────────
+
+  gateway:
+    build:
+      context: C:/Users/hicha/Desktop/premier-gateway     # ✅ CORRIGÉ — pointe vers le vrai projet IntelliJ
+    container_name: breast-gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./storage:/app/storage     # ✅ AJOUTÉ — stockage persistant des PDF
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/clinique_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin123
+      SERVICES_DETECTION: http://detection-service:8011
+      SERVICES_CLASSIFICATION: http://classification-service:8012
+      SERVICES_SEGMENTATION: http://segmentation-service:8013
+      SERVICES_BIRADS: http://birads-service:8014
+      SERVICES_ASSEMBLER: http://assembler-service:8018
+      SERVICES_LLM_NARRATIVE: http://llm-narrative-service:8020
+      SERVICES_LOCALIZATION: http://localization-service:8015
+      SERVICES_TUMORSIZE: http://tumorsize-service:8016
+      SERVICES_VISUALIZATION: http://visualization-service:8019
+    depends_on:
+      postgres:
+        condition: service_healthy
+      detection-service:
+        condition: service_started
+      classification-service:
+        condition: service_started
+      segmentation-service:
+        condition: service_started
+      birads-service:
+        condition: service_started
+      localization-service:
+        condition: service_started
+      tumorsize-service:
+        condition: service_started
+      assembler-service:
+        condition: service_started
+      visualization-service:
+        condition: service_started
+      llm-narrative-service:
+        condition: service_started
+
+  # ── React Frontend ───────────────────────────────────────────────────────────
+
+  frontend:
+    build:
+      context: ./premier-frontend2
+    container_name: breast-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+
+  # ── Python AI Services ───────────────────────────────────────────────────────
+
+  detection-service:
+    build:
+      context: ./detection-services
+    container_name: breast-detection-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8011
+    ports:
+      - "8011:8011"
+    environment:
+      CLASSIFICATION_SERVICE_URL: http://classification-service:8012
+      SEGMENTATION_SERVICE_URL: http://segmentation-service:8013
+      BIRADS_SERVICE_URL: http://birads-service:8014
+      LOCALIZATION_SERVICE_URL: http://localization-service:8015
+      TUMORSIZE_SERVICE_URL: http://tumorsize-service:8016
+      ASSEMBLER_SERVICE_URL: http://assembler-service:8018
+      VISUALIZATION_SERVICE_URL: http://visualization-service:8019
+      NARRATIVE_SERVICE_URL: http://llm-narrative-service:8020
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+    depends_on:
+      - classification-service
+      - segmentation-service
+      - birads-service
+      - localization-service
+      - tumorsize-service
+      - assembler-service
+      - visualization-service
+      - llm-narrative-service
+
+  classification-service:
+    build:
+      context: ./classification-service
+    container_name: breast-classification-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8012
+    ports:
+      - "8012:8012"
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+
+  segmentation-service:
+    build:
+      context: ./segmentation-service
+    container_name: breast-segmentation-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8013
+    ports:
+      - "8013:8013"
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+
+  birads-service:
+    build:
+      context: ./birads-service
+    container_name: breast-birads-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8014
+    ports:
+      - "8014:8014"
+
+  localization-service:
+    build:
+      context: ./localization-service
+    container_name: breast-localization-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8015
+    ports:
+      - "8015:8015"
+
+  tumorsize-service:
+    build:
+      context: ./tumorsize-service
+    container_name: breast-tumorsize-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8016
+    ports:
+      - "8016:8016"
+
+  assembler-service:
+    build:
+      context: ./assembler-service
+    container_name: breast-assembler-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8018
+    ports:
+      - "8018:8018"
+    environment:
+      ENABLE_RABBITMQ: "false"
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+
+  visualization-service:
+    build:
+      context: ./visualization-service
+    container_name: breast-visualization-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8019
+    ports:
+      - "8019:8019"
+    environment:
+      ENABLE_RABBITMQ: "false"
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+
+  llm-narrative-service:
+    build:
+      context: ./llm-narrative-service
+    container_name: breast-llm-narrative-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8020
+    ports:
+      - "8020:8020"
+    environment:
+      ENABLE_RABBITMQ: "false"
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+
+volumes:
+  postgres_data:
